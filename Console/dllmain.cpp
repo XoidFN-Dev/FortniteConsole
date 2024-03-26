@@ -3,10 +3,15 @@
 
 namespace Offsets
 {
-    int StaticFindObject = 0x1909800; // "48 89 74 24 08 48 89 7C 24 18 55 41"
+    constexpr int StaticFindObject = 0x1909800; // "48 89 74 24 08 48 89 7C 24 18 55 41"
+
+    constexpr int ConsoleClass = 0x00F0;
+    constexpr int GameViewport = 0x0910;
+
+    constexpr int ViewportConsole = 0x0040;
 }
 
-static void* (*StaticFindObject)(void* Class, void* InOuter, const TCHAR* Name, bool ExactClass);
+static void* (*StaticFindObject)(void* Class, void* InOuter, const wchar_t* Name, bool ExactClass);
 
 DWORD WINAPI MainThread(HMODULE hModule)
 {
@@ -18,8 +23,8 @@ DWORD WINAPI MainThread(HMODULE hModule)
         {
             void** VTable = *reinterpret_cast<void***>(const_cast<void*>(GEngine));
 
-            void* ConsoleClass = *reinterpret_cast<void**>(__int64(GEngine) + 0x00F0);
-            void* GameViewport = *reinterpret_cast<void**>(__int64(GEngine) + 0x0910);
+            void* ConsoleClass = *reinterpret_cast<void**>(__int64(GEngine) + Offsets::ConsoleClass);
+            void* GameViewport = *reinterpret_cast<void**>(__int64(GEngine) + Offsets::GameViewport);
 
             void* GameplayStatics = StaticFindObject(nullptr, nullptr, L"/Script/Engine.Default__GameplayStatics", false);
             void* SpawnObject = StaticFindObject(nullptr, nullptr, L"/Script/Engine.GameplayStatics.SpawnObject", false);
@@ -31,15 +36,12 @@ DWORD WINAPI MainThread(HMODULE hModule)
                 void* ReturnValue;
             };
 
-            GameplayStatics_SpawnObject Params{};
-
-            Params.ObjectClass = ConsoleClass;
-            Params.Param_Outer = GameViewport;
+            GameplayStatics_SpawnObject Params{ ConsoleClass, GameViewport };
 
             reinterpret_cast<void(*)(void* Object, void* Function, void* Parms)>(VTable[0x4D])(GameplayStatics, SpawnObject, &Params);
 
             if (Params.ReturnValue != nullptr)
-                *reinterpret_cast<void**>(__int64(GameViewport) + 0x0040) = Params.ReturnValue;
+                *reinterpret_cast<void**>(__int64(GameViewport) + Offsets::ViewportConsole) = Params.ReturnValue;
         }
     }
 
