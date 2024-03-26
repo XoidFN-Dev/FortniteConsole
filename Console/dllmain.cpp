@@ -3,7 +3,7 @@
 
 namespace Offsets
 {
-    constexpr int StaticFindObject = 0x1909800; // "48 89 74 24 08 48 89 7C 24 18 55 41"
+    constexpr int StaticFindObject = 0x17A803C;
 
     constexpr int ConsoleClass = 0x00F0;
     constexpr int GameViewport = 0x0910;
