@@ -17,7 +17,7 @@ DWORD WINAPI MainThread(HMODULE hModule)
 {
     if (StaticFindObject = decltype(StaticFindObject)(__int64(GetModuleHandle(0)) + Offsets::StaticFindObject))
     {
-        void* GEngine = StaticFindObject(nullptr, nullptr, L"/Engine/Transient.FortEngine_2147482646", false);
+        static void* GEngine = StaticFindObject(nullptr, nullptr, L"/Engine/Transient.FortEngine_2147482646", false);
 
         if (GEngine != nullptr)
         {
