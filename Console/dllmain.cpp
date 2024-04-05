@@ -11,21 +11,21 @@ namespace Offsets
     constexpr int ViewportConsole = 0x0040;
 }
 
-static void* (*StaticFindObject)(void* Class, void* InOuter, const wchar_t* Name, bool ExactClass);
+static void* (*StaticFindObject)(void* Class, void* InOuter, const wchar_t* Name, bool ExactClass) = decltype(StaticFindObject)(__int64(GetModuleHandle(0)) + Offsets::StaticFindObject);
 
 DWORD WINAPI MainThread(HMODULE hModule)
 {
-    if (StaticFindObject = decltype(StaticFindObject)(__int64(GetModuleHandle(0)) + Offsets::StaticFindObject))
+    static void* GEngine = StaticFindObject(nullptr, nullptr, L"/Engine/Transient.FortEngine_2147482646", false);
+
+    if (GEngine != nullptr)
     {
-        static void* GEngine = StaticFindObject(nullptr, nullptr, L"/Engine/Transient.FortEngine_2147482646", false);
+        void** VTable = *reinterpret_cast<void***>(const_cast<void*>(GEngine));
 
-        if (GEngine != nullptr)
+        void* ConsoleClass = *reinterpret_cast<void**>(__int64(GEngine) + Offsets::ConsoleClass);
+        void* GameViewport = *reinterpret_cast<void**>(__int64(GEngine) + Offsets::GameViewport);
+
+        if (ConsoleClass && GameViewport)
         {
-            void** VTable = *reinterpret_cast<void***>(const_cast<void*>(GEngine));
-
-            void* ConsoleClass = *reinterpret_cast<void**>(__int64(GEngine) + Offsets::ConsoleClass);
-            void* GameViewport = *reinterpret_cast<void**>(__int64(GEngine) + Offsets::GameViewport);
-
             void* GameplayStatics = StaticFindObject(nullptr, nullptr, L"/Script/Engine.Default__GameplayStatics", false);
             void* SpawnObject = StaticFindObject(nullptr, nullptr, L"/Script/Engine.GameplayStatics.SpawnObject", false);
 
@@ -41,7 +41,9 @@ DWORD WINAPI MainThread(HMODULE hModule)
             reinterpret_cast<void(*)(void*, void*, void*)>(VTable[0x4D])(GameplayStatics, SpawnObject, &Params);
 
             if (Params.ReturnValue != nullptr)
+            {
                 *reinterpret_cast<void**>(__int64(GameViewport) + Offsets::ViewportConsole) = Params.ReturnValue;
+            }
         }
     }
 
