@@ -38,7 +38,7 @@ DWORD WINAPI MainThread(HMODULE hModule)
 
             GameplayStatics_SpawnObject Params{ ConsoleClass, GameViewport };
 
-            reinterpret_cast<void(*)(void* Object, void* Function, void* Parms)>(VTable[0x4D])(GameplayStatics, SpawnObject, &Params);
+            reinterpret_cast<void(*)(void*, void*, void*)>(VTable[0x4D])(GameplayStatics, SpawnObject, &Params);
 
             if (Params.ReturnValue != nullptr)
                 *reinterpret_cast<void**>(__int64(GameViewport) + Offsets::ViewportConsole) = Params.ReturnValue;
