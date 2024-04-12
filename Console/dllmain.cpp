@@ -27,7 +27,7 @@ DWORD WINAPI MainThread(HMODULE hModule)
         if (ConsoleClass && GameViewport)
         {
             void* GameplayStatics = StaticFindObject(nullptr, nullptr, L"/Script/Engine.Default__GameplayStatics", false);
-            void* SpawnObject = StaticFindObject(nullptr, nullptr, L"/Script/Engine.GameplayStatics.SpawnObject", false);
+            void* Function = StaticFindObject(nullptr, nullptr, L"/Script/Engine.GameplayStatics.SpawnObject", false);
 
             struct GameplayStatics_SpawnObject
             {
@@ -38,7 +38,7 @@ DWORD WINAPI MainThread(HMODULE hModule)
 
             GameplayStatics_SpawnObject Params{ ConsoleClass, GameViewport };
 
-            reinterpret_cast<void(*)(void*, void*, void*)>(VTable[0x4D])(GameplayStatics, SpawnObject, &Params);
+            reinterpret_cast<void(*)(void*, void*, void*)>(VTable[0x4D])(GameplayStatics, Function, &Params);
 
             if (Params.ReturnValue != nullptr)
             {
