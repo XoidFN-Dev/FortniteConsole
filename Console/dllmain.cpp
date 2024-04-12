@@ -5,10 +5,10 @@ namespace Offsets
 {
     constexpr int StaticFindObject = 0x1520080; // 29.20
 
-    constexpr int ConsoleClass = 0x00F0;
-    constexpr int GameViewport = 0x0910;
+    constexpr int ConsoleClass = 0x00F0; // UEngine
+    constexpr int GameViewport = 0x0910; // UEngine
 
-    constexpr int ViewportConsole = 0x0040;
+    constexpr int ViewportConsole = 0x0040; // UGameViewportClient
 }
 
 static void* (*StaticFindObject)(void* Class, void* InOuter, const wchar_t* Name, bool ExactClass) = decltype(StaticFindObject)(__int64(GetModuleHandle(0)) + Offsets::StaticFindObject);
